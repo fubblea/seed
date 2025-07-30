@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cj5vni108t1e2"]
+
+[ext_resource type="Texture2D" uid="uid://ov7nblpmjet5" path="res://Entities/SunLight/yellow-sun-rays-png-2.png" id="1_ul1c1"]
+
+[node name="SunLight" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(23, 19)
+texture = ExtResource("1_ul1c1")

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq6scmmibawyy"]
+
+[ext_resource type="Texture2D" uid="uid://qd3rroljeo81" path="res://Entities/WaterSpray/water-drop-icon-symbol-20.png" id="1_67gpt"]
+
+[node name="WaterSpray" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_67gpt")
