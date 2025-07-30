@@ -1,0 +1,100 @@
+# Modified from: https://github.com/deplicator/github-godot4-itchio
+
+name: Deploy to Itch.io
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  BUTLER_API_KEY: ${{secrets.ITCHIO_API_KEY}}
+  ITCHIO_USERNAME: ${{secrets.ITCHIO_USERNAME}}
+  PROJECT_NAME: "seed"
+  GODOT_VERSION: "4.4.1"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Build:
+    environment:
+      name: Itch.io
+      url: https://fubblea.itch.io/seed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          curl -L -o godot.zip https://github.com/godotengine/godot/releases/download/$GODOT_VERSION-stable/Godot_v$GODOT_VERSION-stable_linux.x86_64.zip
+          unzip godot.zip
+          mv Godot_v$GODOT_VERSION-stable_linux.x86_64 godot
+          chmod +x godot
+
+      - name: Download Godot Export Templates
+        run: |
+          curl -L -o export_templates.zip https://github.com/godotengine/godot-builds/releases/download/$GODOT_VERSION-stable/Godot_v$GODOT_VERSION-stable_export_templates.tpz
+          unzip export_templates.zip
+
+      - name: Install Export Templates
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates/$GODOT_VERSION.stable
+          mv ./templates/* ~/.local/share/godot/export_templates/$GODOT_VERSION.stable
+
+      - name: Create Export Directory
+        run: |
+          mkdir -p exports
+          mkdir -p exports/html
+
+      - name: Build
+        run: |
+          ./godot --headless --export-release html
+          ./godot --headless --export-release linux
+          ./godot --headless --export-release windows
+
+        # Mac being a pita with notorizing the app, so skipping for now
+        # ./godot --headless --export-release macOS
+
+      - name: Zip HTML Export
+        run: |
+          cd exports/html
+          zip $PROJECT_NAME-html.zip -r -m *
+          mv $PROJECT_NAME-html.zip ..
+          cd -
+
+      - name: Save Artifacts for Next Job
+        uses: actions/upload-artifact@v4
+        with:
+          name: exports
+          path: exports
+
+  Publish:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: exports
+          path: exports
+
+      - name: Download Butler
+        run: |
+          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip
+          chmod +x butler
+          ./butler -V
+
+      - name: Login To Butler
+        run: ./butler login
+
+      - name: Push To Itch
+        run: |
+          ./butler push ./exports/$PROJECT_NAME-html.zip $ITCHIO_USERNAME/$PROJECT_NAME:html
+          ./butler push ./exports/$PROJECT_NAME-itch.io-linux.zip $ITCHIO_USERNAME/$PROJECT_NAME:linux
+          ./butler push ./exports/$PROJECT_NAME-itch.io-windows.exe $ITCHIO_USERNAME/$PROJECT_NAME:windows
+        #  ./butler push ./exports/$PROJECT_NAME-macos.zip $ITCHIO_USERNAME/$PROJECT_NAME:mac
