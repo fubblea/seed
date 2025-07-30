@@ -13,7 +13,7 @@ script = ExtResource("1_6tkng")
 metadata/_custom_type_script = "uid://dxsri6afl3qpk"
 
 [node name="GameTimer" type="Timer" parent="GameState"]
-wait_time = 3.0
+wait_time = 120.0
 one_shot = true
 
 [node name="NewIdealTimer" type="Timer" parent="GameState"]
@@ -21,6 +21,8 @@ wait_time = 5.0
 one_shot = true
 
 [node name="EndGameTimer" type="Timer" parent="GameState"]
+wait_time = 3.0
+one_shot = true
 
 [node name="MainUI" parent="." instance=ExtResource("1_22j6o")]
 

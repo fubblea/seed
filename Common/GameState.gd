@@ -55,10 +55,11 @@ func _process(_delta: float) -> void:
 	if plant_growth > 100:
 		game_timer.stop()
 
-		main_ui.final_text.text = "WON!!!"
+		main_ui.final_text.text = "YOU WIN!!!"
 		main_ui.final_text.visible = true
 
 		plant.animated_sprite.play("grown")
+		end_game_timer.start()
 		return
 
 	if game_timer.time_left <= 0:
