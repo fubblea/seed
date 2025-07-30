@@ -1,26 +1,42 @@
-[gd_scene load_steps=5 format=3 uid="uid://c1vjk7avoyen2"]
+[gd_scene load_steps=6 format=3 uid="uid://c1vjk7avoyen2"]
 
 [ext_resource type="Script" uid="uid://dxsri6afl3qpk" path="res://Common/GameState.gd" id="1_6tkng"]
 [ext_resource type="PackedScene" uid="uid://dprjxafn4og3f" path="res://UI/main_ui.tscn" id="1_22j6o"]
 [ext_resource type="PackedScene" uid="uid://bq6scmmibawyy" path="res://Entities/WaterSpray/water_spray.tscn" id="2_6s7na"]
+[ext_resource type="PackedScene" uid="uid://bnueq47us2u3j" path="res://Entities/Plant/plant.tscn" id="5_jcng7"]
 [ext_resource type="PackedScene" uid="uid://cj5vni108t1e2" path="res://Entities/SunLight/sun_light.tscn" id="5_vy3jo"]
 
-[node name="Node2D" type="Node2D"]
+[node name="PlantView" type="Node2D"]
 
 [node name="GameState" type="Node" parent="."]
 script = ExtResource("1_6tkng")
 metadata/_custom_type_script = "uid://dxsri6afl3qpk"
 
 [node name="GameTimer" type="Timer" parent="GameState"]
+wait_time = 3.0
+one_shot = true
+
+[node name="NewIdealTimer" type="Timer" parent="GameState"]
+wait_time = 5.0
+one_shot = true
+
+[node name="EndGameTimer" type="Timer" parent="GameState"]
 
 [node name="MainUI" parent="." instance=ExtResource("1_22j6o")]
 
 [node name="WaterSpray" parent="." instance=ExtResource("2_6s7na")]
+modulate = Color(1, 1, 1, 0)
 position = Vector2(577, 159)
 scale = Vector2(0.535744, 0.535744)
 
 [node name="SunLight" parent="." instance=ExtResource("5_vy3jo")]
+modulate = Color(1, 1, 1, 0)
 position = Vector2(582, 462)
 
-[connection signal="timer_value_changed" from="GameState" to="MainUI" method="_on_game_state_timer_value_changed"]
+[node name="Plant" parent="." instance=ExtResource("5_jcng7")]
+position = Vector2(580, 346)
+scale = Vector2(0.463082, 0.463082)
+
+[connection signal="timeout" from="GameState/NewIdealTimer" to="GameState" method="_on_new_ideal_timer_timeout"]
+[connection signal="timeout" from="GameState/EndGameTimer" to="GameState" method="_on_end_game_timer_timeout"]
 [connection signal="slider_value_changed" from="MainUI" to="GameState" method="_on_main_ui_slider_value_changed"]

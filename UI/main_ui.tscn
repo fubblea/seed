@@ -108,5 +108,31 @@ grow_horizontal = 0
 theme_override_font_sizes/font_size = 66
 text = "Hi"
 
+[node name="FinalText" type="Label" parent="."]
+offset_left = 7.0
+offset_top = 9.0
+offset_right = 844.0
+offset_bottom = 209.0
+scale = Vector2(0.537502, 0.523143)
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 146
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlantGrowth" type="ProgressBar" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -234.0
+offset_top = -246.0
+offset_right = 253.0
+offset_bottom = -219.0
+grow_horizontal = 2
+grow_vertical = 0
+step = 0.1
+
 [connection signal="value_changed" from="Sunlight/SunlightSlider" to="." method="_on_sunlight_slider_value_changed"]
 [connection signal="value_changed" from="Water/WaterSlider" to="." method="_on_water_slider_value_changed"]

@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bnueq47us2u3j"]
+
+[ext_resource type="Texture2D" uid="uid://chnnv070bopdw" path="res://Entities/Plant/Assets/plant_grown.png" id="1_6aboo"]
+[ext_resource type="Script" uid="uid://b8mcvr2gavyjm" path="res://Entities/Plant/plant.gd" id="1_60u0c"]
+[ext_resource type="Texture2D" uid="uid://cygvdlxa8nqyf" path="res://Entities/Plant/Assets/plant_ungrown.png" id="2_60u0c"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jyypn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_6aboo")
+}],
+"loop": true,
+"name": &"grown",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_60u0c")
+}],
+"loop": true,
+"name": &"ungrown",
+"speed": 5.0
+}]
+
+[node name="Plant" type="Node2D"]
+script = ExtResource("1_60u0c")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_jyypn")
+animation = &"ungrown"
+autoplay = "ungrown"
